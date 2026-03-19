@@ -1,40 +1,30 @@
-name: Qt WebAssembly CI
+name: Qt WebAssembly CI 
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
 
 jobs:
   build-wasm:
     runs-on: ubuntu-latest
+    # This is the "Magic" step: The job runs INSIDE your pre-built image
+    container:
+      image: ghcr.io/goovey/wasm-test/qt6-wasm:latest
+      # We need to run as root inside the container to source emsdk easily
+      options: --user root
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker Build Environment
-        # This builds the image defined in your Dockerfile
-        run: docker build -t qt-wasm-builder .
-
       - name: Compile Application
-        # We use the same command from your Makefile/build.sh
         run: |
-          docker run --rm -v ${{ github.workspace }}:/project qt-wasm-builder \
-          /bin/bash -c "source /opt/emsdk/emsdk_env.sh && \
-          qt-cmake -S . -B build -G Ninja && \
-          cmake --build build"
+          source /opt/emsdk/emsdk_env.sh
+          qt-cmake -S . -B build -G Ninja
+          cmake --build build
 
-      - name: Upload Build Artifacts
-        # This saves the .wasm, .js, and .html files so you can download them
+      - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: qt-wasm-release
-          path: |
-            build/*.wasm
-            build/*.js
-            build/*.html
+          path: build/WasmTest*
