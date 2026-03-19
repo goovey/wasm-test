@@ -1,0 +1,35 @@
+# --- Build Artifacts ---
+build/
+bin/
+obj/
+
+# --- Qt Specific ---
+*.user
+*.user.*
+.qt/
+CMakeLists.txt.user
+
+# --- WebAssembly Specific ---
+*.wasm
+*.js
+*.html
+# Only ignore .js/.html if they are build-generated (WasmTest.js, etc.)
+# Do NOT ignore your server.py
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- IDEs and Editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+.docker-build-cache/
