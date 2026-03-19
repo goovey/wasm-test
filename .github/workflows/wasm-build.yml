@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Compile Application
+        shell: bash
         run: |
           source /opt/emsdk/emsdk_env.sh
           qt-cmake -S . -B build -G Ninja
