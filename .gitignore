@@ -22,7 +22,9 @@ __pycache__/
 *$py.class
 
 # --- IDEs and Editors ---
-.vscode/
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
 .idea/
 *.swp
 *.swo

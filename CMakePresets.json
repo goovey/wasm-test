@@ -1,0 +1,18 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "qt-wasm-dev",
+      "displayName": "Qt 6.8 WASM",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS_DEBUG": "-g",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_TOOLCHAIN_FILE": "/6.8.0/wasm_singlethread/lib/cmake/Qt6/qt.toolchain.cmake",
+        "QT_HOST_PATH": "/6.8.0/gcc_64"
+      }
+    }
+  ]
+}
