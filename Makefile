@@ -1,19 +1,36 @@
 # Variables
 IMAGE=qt-wasm-builder
 BUILD_DIR=build
-# Capture current user/group IDs from the host OS
 UID=$(shell id -u)
 GID=$(shell id -g)
 
+# Default mode is 'dev'
+MODE ?= dev
+
+# Logic to select the correct pair of presets based on MODE
+ifeq ($(MODE),release)
+    CONF_PRESET=qt-wasm-release
+    BUILD_PRESET=release
+else
+    # Defaulting to dev settings
+    CONF_PRESET=qt-wasm-dev
+    BUILD_PRESET=dev
+endif
+
 .PHONY: all clean server help
 
-all: ## Build the WebAssembly application (No sudo required)
-	@echo "Starting build as User: $(UID), Group: $(GID)..."
-	docker run --rm -v $(shell pwd):/project \
+all: ## Build the WebAssembly application (Default MODE=dev, or MODE=release)
+	@echo "Targeting MODE: $(MODE)"
+	@echo "Using Configure Preset: $(CONF_PRESET)"
+	@echo "Using Build Preset: $(BUILD_PRESET)"
+	
+	docker run --rm -v $(shell pwd):/project -w /project \
 		--user $(UID):$(GID) \
 		$(IMAGE) \
-		/bin/bash -c "source /opt/emsdk/emsdk_env.sh && qt-cmake -S . -B $(BUILD_DIR) -G Ninja && cmake --build $(BUILD_DIR)"
-	@echo "Build successful. Files in $(BUILD_DIR)/ are owned by $(shell whoami)."
+		/bin/bash -c "cmake --preset $(CONF_PRESET) && \
+		              cmake --build --preset $(BUILD_PRESET)"
+	
+	@echo "Build successful. Artifacts are in $(BUILD_DIR)/"
 
 clean: ## Remove the build directory
 	rm -rf $(BUILD_DIR)

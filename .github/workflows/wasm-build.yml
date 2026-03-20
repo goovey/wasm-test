@@ -20,9 +20,8 @@ jobs:
       - name: Compile Application
         shell: bash
         run: |
-          source /opt/emsdk/emsdk_env.sh
-          qt-cmake -S . -B build -G Ninja
-          cmake --build build
+          cmake --preset qt-wasm-release
+          cmake --build --preset release
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
